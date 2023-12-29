@@ -13,12 +13,16 @@ project(ECS_DEMO
 find_package(SFML COMPONENTS system graphics window CONFIG REQUIRED)
 
 add_executable(output)
-target_sources(output PRIVATE src/main.cpp)
-target_include_directories(output PRIVATE include/)
+target_sources(output PRIVATE
+    src/main.cpp
+    src/Components.cpp
+    src/EntityManager.cpp
+    src/Entity.cpp)
+target_include_directories(output PRIVATE "${CMAKE_SOURCE_DIR}/include/")
 target_link_libraries(output PRIVATE sfml-graphics sfml-window sfml-system)
 
-if(MSVC)
-    target_compile_options(output PRIVATE /W4 /WX)
-else()
-    target_compile_options(output PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
+# if(MSVC)
+# target_compile_options(output PRIVATE /W4 /WX)
+# else()
+# target_compile_options(output PRIVATE -Wall -Wextra -Wpedantic -Werror)
+# endif()
