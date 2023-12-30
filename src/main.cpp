@@ -1,5 +1,7 @@
 #include "Game.hpp"
 
-#include <SFML/Graphics.hpp>
-
-auto main() -> int { return 0; }
+auto main() -> int {
+  Game g("resources/config/Config.txt");
+  g.run();
+  return 0;
+}

@@ -4,8 +4,7 @@
 
 #include <SFML/Graphics/CircleShape.hpp>
 
-class CTransform {
-public:
+struct CTransform {
   Util::Vec2f pos = {0.0f, 0.0f};
   Util::Vec2f velocity = {0.0f, 0.0f};
   float angle = 0.0f;
@@ -14,40 +13,35 @@ public:
              float in_angle) noexcept;
 };
 
-class CShape {
-public:
+struct CShape {
   sf::CircleShape shape;
 
   CShape(float in_radius, int in_sides,
          const sf::Color &in_color = sf::Color::Green,
          const sf::Color &in_outlineColor = sf::Color::White,
-         float in_thickness = 0.f) noexcept;
+         float in_outlineThickness = 0.f) noexcept;
 };
 
-class CCollision {
-public:
+struct CCollision {
   float radius = 0.0f;
 
   CCollision(float in_radius) noexcept;
 };
 
-class CScore {
-public:
+struct CScore {
   int score = 0;
 
   CScore(int in_score) noexcept;
 };
 
-class CLifeSpan {
-public:
+struct CLifeSpan {
   int remaining = 0;
   int total = 0;
 
   CLifeSpan(int in_total) noexcept;
 };
 
-class CInput {
-public:
+struct CInput {
   bool up = false;
   bool left = false;
   bool right = false;

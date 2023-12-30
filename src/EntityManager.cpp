@@ -6,21 +6,11 @@ namespace Engine {
 
 EntityManager::EntityManager() {}
 
-auto EntityManager::addEntity(const std::string &tag) noexcept
-    -> std::shared_ptr<Entity> {
-  // create a new entity object
-  // store it in the vector of all entities
-  // store it in the map of tag->entityVectore
-  // return the shared pointer pointing to that entity
-
-  auto e = std::make_shared<Entity>(tag, ++m_totalEntities);
-}
-
 void EntityManager::update() {
   // called at begining of each frame by game engine
   // entities added will now be available to use this frame
 
-  for (auto e : m_toAdd) {
+  for (auto e : m_entitiesToAdd) {
     m_entities.push_back(e);
     m_entityMap[e->getTag()].push_back(e);
   }
@@ -31,7 +21,26 @@ void EntityManager::update() {
     // hint: use std:remove_if
   }
 
-  m_toAdd.clear();
+  m_entitiesToAdd.clear();
 }
+
+auto EntityManager::addEntity(const std::string &tag) noexcept
+    -> std::shared_ptr<Entity> {
+  auto entity = std::shared_ptr<Entity>(new Entity(tag, ++m_totalEntities));
+  m_entitiesToAdd.push_back(entity);
+
+  return entity;
+}
+
+auto EntityManager::getEntities() noexcept -> const EntityVec & {
+  return m_entities;
+}
+
+auto EntityManager::getEntities(const std::string &tag) noexcept
+    -> const EntityVec & {
+  return m_entityMap[tag];
+}
+
+// void EntityManager::removeDeadEntities(EntityVec &vec) { vec.clear(); }
 
 } // namespace Engine

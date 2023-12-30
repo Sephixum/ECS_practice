@@ -12,7 +12,7 @@ using EntityMap = std::map<std::string, EntityVec>;
 class EntityManager {
 private:
   EntityVec m_entities;
-  EntityVec m_toAdd;
+  EntityVec m_entitiesToAdd;
   EntityMap m_entityMap;
   size_t m_totalEntities = 0;
 
@@ -20,8 +20,9 @@ public:
   EntityManager();
   void update();
   auto addEntity(const std::string &tag) noexcept -> std::shared_ptr<Entity>;
-  auto getEntities() noexcept -> EntityVec &;
-  auto getEntities(const std::string &tag) noexcept -> EntityVec &;
+  auto getEntities() noexcept -> const EntityVec &;
+  auto getEntities(const std::string &tag) noexcept -> const EntityVec &;
+  void removeDeadEntities(EntityVec &vec);
 };
 
 } // namespace Engine

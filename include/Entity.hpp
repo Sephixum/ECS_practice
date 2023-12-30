@@ -10,14 +10,15 @@
 namespace Engine {
 
 class Entity {
+
+  friend class EntityManager;
+
 private:
   const size_t m_id = 0;
   const std::string m_tag = "Default";
   bool m_alive = true;
 
   Entity(const std::string &tag_in, size_t id_in);
-
-  friend class EntityManager;
 
 public:
   std::shared_ptr<CTransform> cTransform;
