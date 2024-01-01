@@ -15,7 +15,8 @@ private:
   sf::Text m_text;
   GameConfig m_config;
   int m_score;
-  size_t m_currentFrame = 0;
+  int m_currentFrame = 0;
+  int m_lastEnemySpawnTime = 0;
   bool m_paused = false;
   bool m_running = true;
 

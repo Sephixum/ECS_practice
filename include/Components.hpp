@@ -19,7 +19,7 @@ struct CShape {
   CShape(float in_radius, int in_sides,
          const sf::Color &in_color = sf::Color::Green,
          const sf::Color &in_outlineColor = sf::Color::White,
-         float in_outlineThickness = 0.f) noexcept;
+         float in_outlineThickness = 1.f) noexcept;
 };
 
 struct CCollision {

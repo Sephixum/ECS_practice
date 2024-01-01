@@ -22,7 +22,6 @@ public:
   auto addEntity(const std::string &tag) noexcept -> std::shared_ptr<Entity>;
   auto getEntities() noexcept -> const EntityVec &;
   auto getEntities(const std::string &tag) noexcept -> const EntityVec &;
-  void removeDeadEntities(EntityVec &vec);
 };
 
 } // namespace Engine

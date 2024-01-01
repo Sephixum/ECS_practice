@@ -28,10 +28,10 @@ public:
   std::shared_ptr<CScore> cScore;
   std::shared_ptr<CLifeSpan> cLifeSpan;
 
-  auto isActive() const noexcept -> bool;
+  auto isAlive() const noexcept -> bool;
   auto getTag() const noexcept -> const std::string &;
   auto getId() const noexcept -> const size_t;
-  void destroy();
+  void destroy() noexcept;
 };
 
 } // namespace Engine

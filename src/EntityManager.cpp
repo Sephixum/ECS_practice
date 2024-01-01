@@ -7,21 +7,17 @@ namespace Engine {
 EntityManager::EntityManager() {}
 
 void EntityManager::update() {
-  // called at begining of each frame by game engine
-  // entities added will now be available to use this frame
-
   for (auto e : m_entitiesToAdd) {
     m_entities.push_back(e);
     m_entityMap[e->getTag()].push_back(e);
   }
-
-  for (auto e : m_entities) {
-    // if e is dead, remove it from m_entities
-    // if e is dead, remove it from m_entitiyMap[e->getTag()]
-    // hint: use std:remove_if
-  }
-
   m_entitiesToAdd.clear();
+
+  m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
+                                  [](const auto &entity) -> bool {
+                                    return !entity->isAlive();
+                                  }),
+                   m_entities.end());
 }
 
 auto EntityManager::addEntity(const std::string &tag) noexcept
@@ -40,7 +36,5 @@ auto EntityManager::getEntities(const std::string &tag) noexcept
     -> const EntityVec & {
   return m_entityMap[tag];
 }
-
-// void EntityManager::removeDeadEntities(EntityVec &vec) { vec.clear(); }
 
 } // namespace Engine
