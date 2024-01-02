@@ -22,26 +22,33 @@ void Game::sMovement() {
   // TODO: implement all entity movement in this function
   // NOTE: reading the m_player component to determine if it should be moving
 
+  auto delta_time = m_deltaClock.restart().asSeconds();
+
   m_player->cTransform->velocity = {0, 0};
 
   if (m_player->cInput->up) {
-    m_player->cTransform->velocity.y = -5;
+    m_player->cTransform->velocity.y = -m_config.player_config.S;
   }
-
   if (m_player->cInput->right) {
-    m_player->cTransform->velocity.x = 5;
+    m_player->cTransform->velocity.x = m_config.player_config.S;
   }
-
   if (m_player->cInput->down) {
-    m_player->cTransform->velocity.y = 5;
+    m_player->cTransform->velocity.y = m_config.player_config.S;
   }
-
   if (m_player->cInput->left) {
-    m_player->cTransform->velocity.x = -5;
+    m_player->cTransform->velocity.x = -m_config.player_config.S;
   }
+  // m_player->cTransform->pos.x += m_player->cTransform->velocity.x;
+  // m_player->cTransform->pos.y += m_player->cTransform->velocity.y;
 
-  m_player->cTransform->pos.x += m_player->cTransform->velocity.x;
-  m_player->cTransform->pos.y += m_player->cTransform->velocity.y;
+  for (auto &e : m_entities.getEntities()) {
+    e->cTransform->angle += 1.0f;
+    e->cTransform->pos.x += e->cTransform->velocity.x * delta_time;
+    e->cTransform->pos.y += e->cTransform->velocity.y * delta_time;
+
+    e->cShape->shape.setRotation(e->cTransform->angle);
+    e->cShape->shape.setPosition(e->cTransform->pos.x, e->cTransform->pos.y);
+  }
 }
 
 void Game::sUserInput() {
@@ -125,11 +132,6 @@ void Game::sLifespan() {}
 void Game::sRender() {
   m_window.clear(sf::Color::Black);
 
-  m_player->cTransform->angle += 1.0f;
-  m_player->cShape->shape.setRotation(m_player->cTransform->angle);
-  m_player->cShape->shape.setPosition(m_player->cTransform->pos.x,
-                                      m_player->cTransform->pos.y);
-
   for (auto entity : m_entities.getEntities()) {
     m_window.draw(entity->cShape->shape);
   }
@@ -137,9 +139,31 @@ void Game::sRender() {
   m_window.display();
 }
 
-void Game::sEnemySpawner() {}
+void Game::sCollision() {
+  // TODO: wall collision and enemy with player collision
 
-void Game::sCollision() {}
+  for (auto &e : m_entities.getEntities()) {
+    //   if (e->cTransform->pos.x + e->cCollision->radius >=
+    //           // m_config.window_config.W ||
+    //           1279 ||
+    //       e->cTransform->pos.x - e->cCollision->radius <= 0) {
+    //     // e->cTransform->velocity.x *= -1;
+    //     std::puts("Out of x bounds.");
+    //   }
+    //   if (e->cTransform->pos.y + e->cCollision->radius >= 719 ||
+    //       e->cTransform->pos.y - e->cCollision->radius <= 0) {
+    //     // e->cTransform->velocity.y *= -1;
+    //     std::puts("Out of y bounds.");
+    //   }
+
+    // std::cout << (e->cTransform->pos.x + e->cCollision->radius) << std::endl;
+    // std::cout << (e->cTransform->pos.x - e->cCollision->radius) << std::endl;
+    // std::cout << (e->cTransform->pos.y + e->cCollision->radius) << std::endl;
+    // std::cout << (e->cTransform->pos.y - e->cCollision->radius) << std::endl;
+
+    std::cout << (e->cCollision->radius) << std::endl;
+  }
+}
 
 void Game::spawnPlayer() {
   auto entity = m_entities.addEntity("player");
@@ -148,28 +172,42 @@ void Game::spawnPlayer() {
   auto my = m_window.getSize().y / 2.0f;
 
   entity->cTransform = std::make_shared<CTransform>(
-      Util::Vec2f(mx, my), Util::Vec2f(1.0f, 1.0f), 0.0f);
+      Util::Vec2f(mx, my),
+      Util::Vec2f(static_cast<float>(m_config.player_config.S),
+                  static_cast<float>(m_config.player_config.S)),
+      0.0f);
 
-  entity->cShape = std::make_shared<CShape>(32.0f, 8, sf::Color(10, 10, 10),
-                                            sf::Color(255, 0, 0), 4.0f);
+  entity->cShape = std::make_shared<CShape>(
+      static_cast<float>(m_config.player_config.SR), 8, sf::Color(10, 10, 10),
+      sf::Color(255, 0, 0), 4.0f);
 
   entity->cInput = std::make_shared<CInput>();
+
+  entity->cCollision = std::make_shared<CCollision>(32.f);
 
   m_player = entity;
 }
 
+void Game::sEnemySpawner() { spawnEnemy(); }
+
 void Game::spawnEnemy() {
   auto entity = m_entities.addEntity("enemy");
 
-  auto mx = m_window.getSize().x / 3.0f;
-  auto my = m_window.getSize().y / 3.0f;
+  static float tmp = 10.f;
 
   entity->cTransform = std::make_shared<CTransform>(
-      Util::Vec2f(mx, my), Util::Vec2f(5.0f, 5.0f), 10.0f);
+      Util::Vec2f(100.f, 100.f),
+      Util::Vec2f(m_config.enemy_config.SMAX, m_config.enemy_config.SMAX),
+      10.0f + tmp);
 
   entity->cShape = std::make_shared<CShape>(40.0f, 8);
 
+  entity->cShape->shape.setPosition(entity->cTransform->pos.x,
+                                    entity->cTransform->pos.y);
+
   m_lastEnemySpawnTime = m_currentFrame;
+
+  tmp += 10.f;
 }
 
 void Game::spawSmallEnemies(std::shared_ptr<Engine::Entity> entity) {
@@ -198,15 +236,14 @@ void Game::run() {
     m_entities.update();
 
     if (!m_paused) {
-      if (m_currentFrame - m_lastEnemySpawnTime == 60) {
+      if (m_currentFrame - m_lastEnemySpawnTime == m_config.enemy_config.SI) {
         std::puts("sEnemySpawner()");
-        m_lastEnemySpawnTime = m_currentFrame;
-        // sEnemySpawner();
+        sEnemySpawner();
       }
 
-      sMovement();
-      // sCollision();
       sUserInput();
+      sMovement();
+      sCollision();
     }
 
     sRender();

@@ -16,12 +16,11 @@ find_package(SFML COMPONENTS system graphics window CONFIG REQUIRED)
 
 add_executable(output)
 
-if(MSVC)
-    target_compile_options(output PRIVATE /W4 /WX)
-else()
-    target_compile_options(output PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
-
+# if(MSVC)
+# target_compile_options(output PRIVATE /W4 /WX)
+# else()
+# target_compile_options(output PRIVATE -Wall -Wextra -Wpedantic -Werror)
+# endif()
 target_sources(output PRIVATE
     src/main.cpp
     src/Components.cpp

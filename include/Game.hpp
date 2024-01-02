@@ -10,6 +10,7 @@
 class Game {
 private:
   sf::RenderWindow m_window;
+  sf::Clock m_deltaClock;
   Engine::EntityManager m_entities;
   sf::Font m_font;
   sf::Text m_text;

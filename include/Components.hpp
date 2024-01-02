@@ -25,7 +25,7 @@ struct CShape {
 struct CCollision {
   float radius = 0.0f;
 
-  CCollision(float in_radius) noexcept;
+  CCollision(float in_radius = 0.0f) noexcept;
 };
 
 struct CScore {

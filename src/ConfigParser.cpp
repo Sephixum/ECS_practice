@@ -25,15 +25,15 @@ auto GameConfig::parseConfig(const std::string &file_path) noexcept -> bool {
       iss >> font_config.F >> font_config.S >> font_config.R >> font_config.G >>
           font_config.B;
     } else if (type == "Player") {
-      iss >> player_config.SR >> player_config.CR >> player_config.FR >>
-          player_config.FG >> player_config.FB >> player_config.OR >>
-          player_config.OG >> player_config.OB >> player_config.OT >>
-          player_config.V;
+      iss >> player_config.SR >> player_config.CR >> player_config.S >>
+          player_config.FR >> player_config.FG >> player_config.FB >>
+          player_config.OR >> player_config.OG >> player_config.OB >>
+          player_config.OT >> player_config.V;
     } else if (type == "Enemy") {
-      iss >> enemy_config.SR >> enemy_config.CR >> enemy_config.OR >>
-          enemy_config.OG >> enemy_config.OB >> enemy_config.OT >>
-          enemy_config.VMIN >> enemy_config.VMAX >> enemy_config.L >>
-          enemy_config.SI >> enemy_config.SMIN >> enemy_config.SMAX;
+      iss >> enemy_config.SR >> enemy_config.CR >> enemy_config.SMIN >>
+          enemy_config.SMAX >> enemy_config.OR >> enemy_config.OG >>
+          enemy_config.OB >> enemy_config.OT >> enemy_config.VMIN >>
+          enemy_config.VMAX >> enemy_config.L >> enemy_config.SI;
     } else if (type == "Bullet") {
       iss >> bullet_config.SR >> bullet_config.CR >> bullet_config.FR >>
           bullet_config.FG >> bullet_config.FB >> bullet_config.OR >>
