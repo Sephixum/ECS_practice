@@ -12,10 +12,14 @@ using EntityMap = std::map<std::string, EntityVec>;
 
 class EntityManager {
 private:
-  EntityVec m_entities;
   EntityVec m_entitiesToAdd;
+
+  EntityVec m_entities;
   EntityMap m_entityMap;
+
   size_t m_totalEntities = 0;
+
+  void _remove_dead_entities();
 
 public:
   EntityManager();

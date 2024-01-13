@@ -62,10 +62,9 @@ auto Game::loadConfig(const std::string &config_path) -> bool {
           m_enemy_config.OB >> m_enemy_config.OT >> m_enemy_config.VMIN >>
           m_enemy_config.VMAX >> m_enemy_config.L >> m_enemy_config.SI;
     } else if (type == "Bullet") {
-      iss >> m_bullet_config.SR >> m_bullet_config.CR >> m_bullet_config.FR >>
-          m_bullet_config.FG >> m_bullet_config.FB >> m_bullet_config.OR >>
-          m_bullet_config.OG >> m_bullet_config.OB >> m_bullet_config.OT >>
-          m_bullet_config.V >> m_bullet_config.L >> m_bullet_config.S;
+      iss >> m_bullet_config.SR >> m_bullet_config.CR >> m_bullet_config.S >>
+          m_bullet_config.FR >> m_bullet_config.OR >> m_bullet_config.OT >>
+          m_bullet_config.V >> m_bullet_config.V;
     }
   }
 
@@ -105,8 +104,10 @@ void Game::spawnEnemy() {
   std::uniform_int_distribution ud_y(m_enemy_config.SR,
                                      m_window_config.H - m_enemy_config.SR);
   std::uniform_int_distribution ud_index(0, 1);
+  std::uniform_int_distribution ud_speed(static_cast<int>(m_enemy_config.SMIN),
+                                         static_cast<int>(m_enemy_config.SMAX));
 
-  int tmp_arr[]{-1, 1};
+  int tmp_arr[] = {-1, 1};
 
   int random_x = ud_x(m_random_engine);
   int random_y = ud_y(m_random_engine);
@@ -123,9 +124,9 @@ void Game::spawnEnemy() {
       0.0f);
   new_entity->cShape = std::make_shared<cmp::Shape>(
       static_cast<float>(m_enemy_config.SR), m_enemy_config.VMAX,
-      sf::Color(m_player_config.FR, m_player_config.FG, m_player_config.FB),
-      sf::Color(m_player_config.OR, m_player_config.OG, m_player_config.OB),
-      static_cast<float>(m_player_config.OT));
+      sf::Color(m_player_config.OR, m_enemy_config.OG, m_enemy_config.OB),
+      sf::Color(m_player_config.OR, m_enemy_config.OG, m_enemy_config.OB),
+      static_cast<float>(m_enemy_config.OT));
   new_entity->cCollision = std::make_shared<cmp::Collision>(m_enemy_config.SR);
 }
 
@@ -144,6 +145,7 @@ void Game::spawnBullet(const utl::Vec2f &mouse_pos) {
 
   new_entity->cShape = std::make_shared<cmp::Shape>(m_bullet_config.SR, 16);
   new_entity->cCollision = std::make_shared<cmp::Collision>(m_bullet_config.SR);
+  new_entity->cLifeSpan = std::make_shared<cmp::LifeSpan>(340);
 }
 
 void Game::sMovement() {
@@ -276,6 +278,33 @@ void Game::sUserInput() {
   }
 }
 
+void Game::sLifespan() {
+  int opacity_dec_step = 255 / 85;
+
+  for (auto &bullet : m_entity_manager.getEntities("bullet")) {
+    bullet->cLifeSpan->remaining -= opacity_dec_step;
+    auto remaining_opacity = bullet->cLifeSpan->remaining * 255 / 340;
+    // 85 255
+    // 83  ?
+    auto current_fill_color = bullet->cShape->shape.getFillColor();
+    auto updated_fill_color =
+        sf::Color(current_fill_color.r, current_fill_color.g,
+                  current_fill_color.b, remaining_opacity);
+
+    auto current_outline_color = bullet->cShape->shape.getOutlineColor();
+    auto updated_outline_color =
+        sf::Color(current_outline_color.r, current_outline_color.g,
+                  current_outline_color.b, remaining_opacity);
+
+    bullet->cShape->shape.setFillColor(updated_fill_color);
+    bullet->cShape->shape.setOutlineColor(updated_outline_color);
+
+    if (remaining_opacity <= 0) {
+      bullet->destroy();
+    }
+  }
+}
+
 void Game::sRender() {
   m_window.clear();
 
@@ -287,13 +316,16 @@ void Game::sRender() {
 }
 
 void Game::sEnemySpawner() {
-  // if (m_entity_manager.getEntities("enemy").size() < 10) {
-  spawnEnemy();
-  // }
+  if (m_entity_manager.getEntities("enemy").size() < 1) {
+    spawnEnemy();
+  }
+  std::cout << m_entity_manager.getEntities("enemy").size() << std::endl;
   m_last_enemy_spawn_time = m_current_frame;
 }
 
 void Game::sCollision() {
+  static auto getLength = [](utl::Vec2f a, utl::Vec2f b) {
+    return std::sqrt(std::pow(b.x - a.x, 2) + std::pow(b.y - a.y, 2)); };
   for (auto &entity : m_entity_manager.getEntities()) {
     if (entity->cTransform->pos.x <= entity->cCollision->radius ||
         entity->cTransform->pos.x >=
@@ -305,6 +337,18 @@ void Game::sCollision() {
         entity->cTransform->pos.y >=
             m_window_config.H - entity->cCollision->radius) {
       entity->cTransform->velocity.y *= -1;
+    }
+  }
+
+  for (const auto &bullet : m_entity_manager.getEntities("bullet")) {
+    for (const auto &enemy : m_entity_manager.getEntities("enemy")) {
+      auto hit_condition =
+          bullet->cCollision->radius + enemy->cCollision->radius >=
+          getLength(bullet->cTransform->pos, enemy->cTransform->pos);
+      if (hit_condition) {
+        enemy->destroy();
+        std::puts("enemy hit!");
+      }
     }
   }
 }
@@ -320,14 +364,13 @@ void Game::run() {
     sUserInput();
     if (!m_paused) {
 
-      // if ((m_current_frame - m_last_enemy_spawn_time) == m_enemy_config.SI) {
-      if ((m_current_frame - m_last_enemy_spawn_time) == 60) {
-        // std::puts("sEnemySpawner()");
+      if ((m_current_frame - m_last_enemy_spawn_time) == m_enemy_config.SI) {
         sEnemySpawner();
       }
 
       sCollision();
       sMovement();
+      sLifespan();
 
       ++m_current_frame;
     }

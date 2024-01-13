@@ -1,7 +1,25 @@
 #include "EntityManager.hpp"
+
 #include <algorithm>
 
 namespace eng {
+
+void EntityManager::_remove_dead_entities() {
+  m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
+                                  [](const auto &entity) -> bool {
+                                    return !entity->isAlive();
+                                  }),
+                   m_entities.end());
+
+  for (auto &map : m_entityMap) {
+    auto &vec = map.second;
+    vec.erase(std::remove_if(vec.begin(), vec.end(),
+                             [](const auto &entity) -> bool {
+                               return !entity->isAlive();
+                             }),
+              vec.end());
+  }
+}
 
 EntityManager::EntityManager() {}
 
@@ -10,14 +28,9 @@ void EntityManager::update() {
     m_entities.push_back(entity);
     m_entityMap[entity->getTag()].push_back(entity);
   }
-
   m_entitiesToAdd.clear();
 
-  m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
-                                  [](const auto &entity) -> bool {
-                                    return !entity->isAlive();
-                                  }),
-                   m_entities.end());
+  _remove_dead_entities();
 }
 
 auto EntityManager::addEntity(const std::string &tag) noexcept

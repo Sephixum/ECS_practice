@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/sephix/Documents/C++Related/ECS_practice/build-rel",
+  "command": "/usr/bin/c++  -I/home/sephix/Documents/C++Related/ECS_practice/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/output.dir/src/main.cpp.o -c /home/sephix/Documents/C++Related/ECS_practice/src/main.cpp",
+  "file": "/home/sephix/Documents/C++Related/ECS_practice/src/main.cpp",
+  "output": "CMakeFiles/output.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/sephix/Documents/C++Related/ECS_practice/build-rel",
+  "command": "/usr/bin/c++  -I/home/sephix/Documents/C++Related/ECS_practice/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/output.dir/src/Components.cpp.o -c /home/sephix/Documents/C++Related/ECS_practice/src/Components.cpp",
+  "file": "/home/sephix/Documents/C++Related/ECS_practice/src/Components.cpp",
+  "output": "CMakeFiles/output.dir/src/Components.cpp.o"
+},
+{
+  "directory": "/home/sephix/Documents/C++Related/ECS_practice/build-rel",
+  "command": "/usr/bin/c++  -I/home/sephix/Documents/C++Related/ECS_practice/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/output.dir/src/EntityManager.cpp.o -c /home/sephix/Documents/C++Related/ECS_practice/src/EntityManager.cpp",
+  "file": "/home/sephix/Documents/C++Related/ECS_practice/src/EntityManager.cpp",
+  "output": "CMakeFiles/output.dir/src/EntityManager.cpp.o"
+},
+{
+  "directory": "/home/sephix/Documents/C++Related/ECS_practice/build-rel",
+  "command": "/usr/bin/c++  -I/home/sephix/Documents/C++Related/ECS_practice/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/output.dir/src/Entity.cpp.o -c /home/sephix/Documents/C++Related/ECS_practice/src/Entity.cpp",
+  "file": "/home/sephix/Documents/C++Related/ECS_practice/src/Entity.cpp",
+  "output": "CMakeFiles/output.dir/src/Entity.cpp.o"
+},
+{
+  "directory": "/home/sephix/Documents/C++Related/ECS_practice/build-rel",
+  "command": "/usr/bin/c++  -I/home/sephix/Documents/C++Related/ECS_practice/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/output.dir/src/Game.cpp.o -c /home/sephix/Documents/C++Related/ECS_practice/src/Game.cpp",
+  "file": "/home/sephix/Documents/C++Related/ECS_practice/src/Game.cpp",
+  "output": "CMakeFiles/output.dir/src/Game.cpp.o"
+}
+]

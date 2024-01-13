@@ -104,8 +104,8 @@ private:
   void sUserInput();    // System: User input
   void sLifespan();     // System: Lifespan
   void sRender();       // System: Render / Drawing DONE*
-  void sEnemySpawner(); // System: Spawns Enemies
-  void sCollision();    // System: Collision
+  void sEnemySpawner(); // System: Spawns Enemies DONE*
+  void sCollision();    // System: Collision DONE*
 
 public:
   Game(const std::string &config);

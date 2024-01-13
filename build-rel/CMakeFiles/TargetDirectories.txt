@@ -1,0 +1,3 @@
+/home/sephix/Documents/C++Related/ECS_practice/build-rel/CMakeFiles/output.dir
+/home/sephix/Documents/C++Related/ECS_practice/build-rel/CMakeFiles/edit_cache.dir
+/home/sephix/Documents/C++Related/ECS_practice/build-rel/CMakeFiles/rebuild_cache.dir

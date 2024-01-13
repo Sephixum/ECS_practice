@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/output.dir/src/main.cpp.o CMakeFiles/output.dir/src/Components.cpp.o CMakeFiles/output.dir/src/EntityManager.cpp.o CMakeFiles/output.dir/src/Entity.cpp.o CMakeFiles/output.dir/src/Game.cpp.o -o output  /usr/lib/libsfml-graphics.so.2.6.1 /usr/lib/libsfml-window.so.2.6.1 /usr/lib/libsfml-system.so.2.6.1 
